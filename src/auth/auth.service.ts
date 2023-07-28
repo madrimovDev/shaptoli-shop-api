@@ -1,5 +1,7 @@
 import prisma from '../prisma/prisma.service'
 import bcrypt from 'bcrypt'
+import verifyService from './verify.service'
+import { sendMail } from '../common/mailer.service'
 
 const register = async (email: string, password: string) => {
   const findedUser = await prisma.user.findUnique({
@@ -10,15 +12,23 @@ const register = async (email: string, password: string) => {
   if (findedUser) {
     throw new Error('Email has already exists')
   }
+
   const hashPassword = await bcrypt.hash(password, 10)
   const user = await prisma.user.create({
     data: {
       email,
       password: hashPassword,
-      verified: true,
     },
   })
-  return user
+
+  const verification = await verifyService.createVerification({
+    email,
+    userId: user.id,
+  })
+
+  sendMail(email, verification.code)
+
+  return verification
 }
 
 const login = async (email: string, password: string) => {
@@ -41,7 +51,31 @@ const login = async (email: string, password: string) => {
   return user
 }
 
+const verification = async (verificationId: string, code: string) => {
+  const verification = await verifyService.findVerification(verificationId)
+  if (!verification) {
+    throw new Error('Verification not found')
+  }
+
+  const codeIsValid = +code === verification.code
+
+  if (codeIsValid) {
+    const user = await prisma.user.update({
+      where: {
+        id: verification.userId,
+      },
+      data: {
+        verified: true,
+      },
+    })
+    return user
+  } else {
+    throw new Error('Code not valid')
+  }
+}
+
 export default {
   register,
   login,
+  verification,
 }

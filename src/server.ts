@@ -2,7 +2,7 @@ import { config } from 'dotenv'
 config()
 import express from 'express'
 import cors from 'cors'
-import authRouter from './auth/auth.route'
+import router from './routes'
 
 const app = express()
 
@@ -12,7 +12,7 @@ app.use(cors())
 
 const PORT = process.env.PORT || 3000
 
-app.use('/auth', authRouter)
+app.use('/api/v1', router)
 
 app.listen(PORT, () =>
   console.log(`Server is running. host:http://localhost:${PORT}`)
