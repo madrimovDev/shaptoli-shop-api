@@ -2,6 +2,7 @@ import prisma from '../prisma/prisma.service'
 import bcrypt from 'bcrypt'
 import verifyService from './verify.service'
 import { sendMail } from '../common/mailer.service'
+import forgotPasswordService from './forgot-password.service'
 
 const register = async (email: string, password: string) => {
   const findedUser = await prisma.user.findUnique({
@@ -74,8 +75,56 @@ const verification = async (verificationId: string, code: string) => {
   }
 }
 
+const resend = async (
+  email: string,
+  userId: number,
+  verificationId: string
+) => {
+  const verification = await verifyService.findVerification(verificationId)
+
+  if (verification) {
+    throw new Error('Verification not expiried')
+  }
+
+  const newVerification = await verifyService.createVerification({
+    email,
+    userId,
+  })
+
+  sendMail(email, newVerification.code)
+
+  return newVerification
+}
+
+const forgotPasswordEmail = async (email: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+      AND: {
+        verified: true,
+      },
+    },
+  })
+
+  if (!user) {
+    throw new Error('User not found')
+  }
+
+  const forgotPassword = await forgotPasswordService.createForgotPassword(email)
+
+  const link = `http://localhost:3000/api/v1/auth/forgot-password/?id=${
+    forgotPassword.id
+  }&code=${forgotPassword.code}&time=${new Date(forgotPassword.date).getTime()}`
+
+  sendMail(email, link)
+
+  return forgotPassword
+}
+
 export default {
   register,
   login,
   verification,
+  resend,
+  forgotPasswordEmail,
 }

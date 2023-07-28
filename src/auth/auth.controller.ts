@@ -8,12 +8,13 @@ const register = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body
 
-    const { id } = await authService.register(email, password)
+    const { id, userId } = await authService.register(email, password)
 
     res.send({
       message: 'Register successful',
       verificationId: id,
       timeout: process.env.VERIFICATION_TIMEOUT,
+      userId,
     })
   } catch (e) {
     const error = e as Error
@@ -104,9 +105,56 @@ const verification = async (req: Request, res: Response) => {
   }
 }
 
+const resend = async (req: Request, res: Response) => {
+  try {
+    const { verificationId, email, userId } = req.body
+    const verification = await authService.resend(email, userId, verificationId)
+
+    res.send({
+      message: 'Resend Code',
+      verificationId: verification.id,
+      userId: verification.userId,
+      timeout: process.env.VERIFICATION_TIMEOUT,
+    })
+  } catch (e) {
+    const error = e as Error
+    res.status(403).send({
+      message: error.message,
+    })
+  }
+}
+
+const forgotPasswordEmail = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body
+
+    await authService.forgotPasswordEmail(email)
+
+    res.send({
+      message: `A password reset link has been sent to ${email}`,
+    })
+  } catch (e) {
+    const error = e as Error
+    res.status(403).send({
+      message: error.message,
+    })
+  }
+}
+
+const forgotPasswordLink = async (req: Request, res: Response) => {
+  try {
+    const { id, code, time } = req.query
+    console.log(id, code, time)
+    res.send()
+  } catch (e) {}
+}
+
 export default {
   register,
   login,
   verify,
-  verification
+  verification,
+  resend,
+  forgotPasswordEmail,
+  forgotPasswordLink,
 }

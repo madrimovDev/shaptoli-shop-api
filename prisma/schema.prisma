@@ -33,6 +33,13 @@ model Verification {
   User   User     @relation(fields: [userId], references: [id])
 }
 
+model ForgotPassword {
+  id    String   @unique
+  code  Int
+  email String   @unique
+  date  DateTime @default(now())
+}
+
 model Category {
   id      Int       @id @default(autoincrement())
   name    String    @unique

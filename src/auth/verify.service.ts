@@ -21,15 +21,13 @@ const createVerification = async ({
     },
   })
 
-  console.log(parseInt(process.env.VERIFICATION_TIMEOUT ?? '300000'))
   setTimeout(async () => {
-    console.log('deleting')
     await deleteVerification(verification.id)
-    console.log('deleted')
   }, parseInt(process.env.VERIFICATION_TIMEOUT ?? '300000'))
 
   return verification
 }
+
 async function deleteVerification(id: string) {
   const verification = await prisma.verification.delete({
     where: {
