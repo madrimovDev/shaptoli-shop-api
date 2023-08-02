@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import verifyService from './verify.service'
 import { sendMail } from '../common/mailer.service'
 import forgotPasswordService from './forgot-password.service'
+import createError from 'http-errors'
 
 const register = async (email: string, password: string) => {
   const findedUser = await prisma.user.findUnique({
@@ -11,7 +12,7 @@ const register = async (email: string, password: string) => {
     },
   })
   if (findedUser) {
-    throw new Error('Email has already exists')
+    throw createError(400, 'Email already exists')
   }
 
   const hashPassword = await bcrypt.hash(password, 10)
@@ -40,13 +41,13 @@ const login = async (email: string, password: string) => {
   })
 
   if (!user) {
-    throw new Error('User not found!')
+    throw createError(404, 'User not found')
   }
 
   const compare = await bcrypt.compare(password, user.password)
 
   if (!compare) {
-    throw new Error('Passwrod wrong')
+    throw createError(400, 'Wrong Password')
   }
 
   return user
@@ -55,7 +56,7 @@ const login = async (email: string, password: string) => {
 const verification = async (verificationId: string, code: string) => {
   const verification = await verifyService.findVerification(verificationId)
   if (!verification) {
-    throw new Error('Verification not found')
+    throw createError(404, 'Verification not found')
   }
 
   const codeIsValid = +code === verification.code
@@ -71,7 +72,7 @@ const verification = async (verificationId: string, code: string) => {
     })
     return user
   } else {
-    throw new Error('Code not valid')
+    throw createError(400, 'Code not valid')
   }
 }
 
@@ -83,7 +84,7 @@ const resend = async (
   const verification = await verifyService.findVerification(verificationId)
 
   if (verification) {
-    throw new Error('Verification not expiried')
+    throw createError(400, 'Verification not expiried')
   }
 
   const newVerification = await verifyService.createVerification({
@@ -107,7 +108,7 @@ const forgotPasswordEmail = async (email: string) => {
   })
 
   if (!user) {
-    throw new Error('User not found')
+    throw createError(404, 'Usernot found')
   }
 
   const forgotPassword = await forgotPasswordService.createForgotPassword(email)
