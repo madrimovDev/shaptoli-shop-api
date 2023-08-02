@@ -1,8 +1,7 @@
-import { NextFunction, Request, Response, Router } from 'express'
+import { Router } from 'express'
 import authController from './auth.controller'
 import bodyValidate from '../common/body-validate.middleware'
 import registerScheme from './auth.model'
-import createHttpError from 'http-errors'
 import { errorHandler } from '../common/error-handler'
 
 const router = Router()
