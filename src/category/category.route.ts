@@ -19,6 +19,13 @@ router.get(
   categoryController.getAllCategory
 )
 router.get('/:id', userVerify(['admin']), categoryController.getCategoryById)
+router.put(
+  '/:id',
+  userVerify(['admin']),
+  bodyValidate(categoryModel.createCategoryScheme),
+  categoryController.updateCategory
+)
+router.delete('/:id', userVerify(['admin']), categoryController.deleteCategory)
 
 router.use(errorHandler)
 

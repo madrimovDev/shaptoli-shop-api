@@ -53,8 +53,49 @@ const getCategoryById = async (
   }
 }
 
+const updateCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params
+    const { name } = req.body
+
+    const category = await categoryService.updateCategory(+id, name)
+
+    res.send({
+      message: 'Category Updated',
+      category,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+const deleteCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params
+
+    const category = await categoryService.deleteCategory(+id)
+
+    res.send({
+      message: 'Category Deleted',
+      category,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
 export default {
   createCategory,
   getAllCategory,
-  getCategoryById
+  getCategoryById,
+  updateCategory,
+  deleteCategory,
 }
