@@ -5,9 +5,6 @@ import { errorHandler } from '../common/error-handler'
 import bodyValidate from '../common/body-validate.middleware'
 import categoryModel from './category.model'
 
-// category/1/product
-// category/1
-
 const router = Router()
 
 router.post(

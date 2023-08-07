@@ -1,11 +1,6 @@
 import createHttpError from 'http-errors'
 import prisma from '../prisma/prisma.service'
 
-// supervisor -> read, write -> create admin
-// admin -> read, write, update
-// user -> read, write
-// anonimus -> read
-
 const createCategory = async (name: string) => {
   const findedCategory = await prisma.category.findUnique({
     where: {
