@@ -35,6 +35,23 @@ const getAllCategory = async (
   }
 }
 
+const getProductsByCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params
+    const category = await categoryService.getProductsByCategory(+id)
+    res.send({
+      message: 'Products By Category',
+      category,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
 const getCategoryById = async (
   req: Request,
   res: Response,
@@ -98,4 +115,5 @@ export default {
   getCategoryById,
   updateCategory,
   deleteCategory,
+  getProductsByCategory,
 }

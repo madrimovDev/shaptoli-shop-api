@@ -19,6 +19,7 @@ router.get(
   categoryController.getAllCategory
 )
 router.get('/:id', userVerify(['admin']), categoryController.getCategoryById)
+router.get('/:id/products', categoryController.getProductsByCategory)
 router.put(
   '/:id',
   userVerify(['admin']),
