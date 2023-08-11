@@ -2,6 +2,12 @@ import { NextFunction, Request, Response } from 'express'
 import productService from './product.service'
 import createHttpError from 'http-errors'
 
+type ControllerType = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => Promise<void>
+
 const createProduct = async (
   req: Request,
   res: Response,
@@ -126,6 +132,51 @@ const deleteImage = async (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
+const createDetail: ControllerType = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const { key, value } = req.body
+
+    const detail = await productService.createDetail(+id, key, value)
+
+    res.status(201).send({
+      message: 'Detail Created',
+      detail,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+const updateDetail: ControllerType = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const { key, value } = req.body
+
+    const detail = await productService.updateDetail(+id, key, value)
+
+    res.send({
+      message: 'Detail Updated',
+      detail,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+const deleteDetail: ControllerType = async (req, res, next) => {
+  try {
+    const { id } = req.params
+
+    const detail = await productService.deleteDetail(+id)
+    res.send({
+      message: 'Detail Deleted',
+      detail,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
 export default {
   createProduct,
   updateProduct,
@@ -133,4 +184,7 @@ export default {
   getProductById,
   deleteImage,
   createImage,
+  createDetail,
+  updateDetail,
+  deleteDetail,
 }
