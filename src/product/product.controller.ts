@@ -177,6 +177,23 @@ const deleteDetail: ControllerType = async (req, res, next) => {
   }
 }
 
+const createReview: ControllerType = async (req, res, next) => {
+  try {
+    const { comment } = req.body
+    const { id } = req.params
+    const userId = res.locals.user.id
+
+    const review = await productService.createReview(comment, userId, +id)
+
+    res.status(201).send({
+      message: 'Review Created',
+      review,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
 export default {
   createProduct,
   updateProduct,
@@ -187,4 +204,5 @@ export default {
   createDetail,
   updateDetail,
   deleteDetail,
+  createReview
 }

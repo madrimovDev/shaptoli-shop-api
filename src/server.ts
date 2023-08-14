@@ -17,3 +17,5 @@ app.use('/api/v1', router)
 app.listen(PORT, () =>
   console.log(`Server is running. host:http://localhost:${PORT}`)
 )
+
+// MVC = Model View Controller

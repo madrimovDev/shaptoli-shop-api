@@ -55,4 +55,6 @@ router.delete(
   productController.deleteDetail
 )
 
+router.post('/:id/review', userVerify(['user']), productController.createReview)
+
 export default router

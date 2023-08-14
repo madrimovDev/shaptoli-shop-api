@@ -175,6 +175,21 @@ const deleteDetail = async (id: number) => {
   return detail
 }
 
+const createReview = async (
+  comment: string,
+  userId: number,
+  productId: number
+) => {
+  const review = await prisma.review.create({
+    data: {
+      comment,
+      userId,
+      productId,
+    },
+  })
+  return review
+}
+
 export default {
   createProduct,
   updateProduct,
@@ -185,4 +200,5 @@ export default {
   createDetail,
   updateDetail,
   deleteDetail,
+  createReview,
 }
