@@ -57,4 +57,8 @@ router.delete(
 
 router.post('/:id/review', userVerify(['user']), productController.createReview)
 
+
+  .post('/card', userVerify(['user', 'admin']), productController.createCart)
+  .get('/cards',  userVerify(['user', 'admin']), productController.getAllCart)
+
 export default router

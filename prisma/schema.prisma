@@ -24,6 +24,12 @@ model User {
   Verification Verification?
 }
 
+// enum Role {
+//   user 
+//   admin
+//   supervisor
+// }
+
 model Verification {
   id     String   @unique
   userId Int      @unique
@@ -113,9 +119,9 @@ model Saved {
 
 model Cart {
   id        Int     @id @default(autoincrement())
-  userId    Int
   productId Int
   count     Int
   Product   Product @relation(fields: [productId], references: [id])
   User      User    @relation(fields: [userId], references: [id])
+  userId    Int
 }
