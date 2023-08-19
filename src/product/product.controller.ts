@@ -1,12 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import productService from './product.service'
 import createHttpError from 'http-errors'
-
-type ControllerType = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => Promise<void>
+import { ControllerType } from '../common/types'
 
 const createProduct = async (
   req: Request,
@@ -194,65 +189,6 @@ const createReview: ControllerType = async (req, res, next) => {
   }
 }
 
-const createCart: ControllerType = async (req, res, next) => {
-  try {
-    const userId = res.locals.user.id
-
-    const productId = +req.body.productId
-
-    const count = +req.body.count
-
-    const newCart = await productService.createCart(userId, productId, count)
-
-    res.status(201).send({
-      message: 'Cart created',
-      newCart,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
-const getAllCart: ControllerType = async (req, res, next) => {
-  try {
-    const allCart = await productService.allCart()
-
-    res.status(200).send({
-      message: 'Retrive all carts',
-      allCart,
-    })
-  } catch (e) {
-    next(e)
-  }
-}
-
-const removedCart: ControllerType = async (req, res, next) => {
-  try {
-    
-    const id = +req.params.id
-
-    const foundCart = await productService.findCartById(id)
-
-    
-    if (!foundCart) {
-      res.status(400).send({
-        message: `Cart not found by id: ${id}  or alredy deleted`
-      })
-    }
-    const deletedCart = await productService.removeCart(id)
-    
-    
-
-    res.status(200).send({
-      message: `Card removed by id: ${deletedCart.id}`,
-      deletedCart
-    })
-
-  } catch (e) {
-    next(e)
-  }
-}
-
 export default {
   createProduct,
   updateProduct,
@@ -264,7 +200,4 @@ export default {
   updateDetail,
   deleteDetail,
   createReview,
-  createCart,
-  getAllCart,
-  removedCart
 }

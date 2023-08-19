@@ -190,43 +190,6 @@ const createReview = async (
   return review
 }
 
-const createCart = async (userId: number, productId: number, count: number) => {
-  const card = await prisma.cart.create({
-    data: {
-      userId,
-      productId,
-      count,
-    },
-  })
-  return card
-}
-
-const allCart = async () => {
-  const card = await prisma.cart.findMany({
-    select: {
-      id: true,
-      count: true,
-      userId: true,
-      productId: true,
-    },
-  })
-  return card
-}
-
-const findCartById = async (id: number) => {
-  const cart = await prisma.cart.findUnique({
-    where: { id },
-  })
-  return cart
-}
-
-const removeCart = async (id: number) => {
-  const card = await prisma.cart.delete({
-    where: { id },
-  })
-  return card
-}
-
 export default {
   createProduct,
   updateProduct,
@@ -238,8 +201,4 @@ export default {
   updateDetail,
   deleteDetail,
   createReview,
-  createCart,
-  allCart,
-  removeCart,
-  findCartById
 }
