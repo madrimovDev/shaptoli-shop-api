@@ -68,6 +68,7 @@ const verification = async (verificationId: string, code: string) => {
       },
       data: {
         verified: true,
+        role: 'user',
       },
     })
     return user
@@ -108,7 +109,7 @@ const forgotPasswordEmail = async (email: string) => {
   })
 
   if (!user) {
-    throw createError(404, 'Usernot found')
+    throw createError(404, 'User not found')
   }
 
   const forgotPassword = await forgotPasswordService.createForgotPassword(email)
@@ -122,10 +123,40 @@ const forgotPasswordEmail = async (email: string) => {
   return forgotPassword
 }
 
+const forgotPasswordLink = async (
+  id: string,
+  code: number,
+  password: string
+) => {
+  const forgotPassword = await forgotPasswordService.findForgotPassword(id)
+
+  if (!forgotPassword) {
+    throw createError(404, 'Forgot password expired')
+  }
+
+  const codeIsValid = code === forgotPassword.code
+
+  if (codeIsValid) {
+    const user = await prisma.user.update({
+      where: {
+        email: forgotPassword.email,
+      },
+      data: {
+        password,
+      },
+    })
+
+    return user
+  }
+
+  throw createError(400, 'Code not valid')
+}
+
 export default {
   register,
   login,
   verification,
   resend,
   forgotPasswordEmail,
+  forgotPasswordLink,
 }

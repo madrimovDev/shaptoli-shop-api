@@ -1,9 +1,7 @@
-import { User } from '@prisma/client'
+import { User, Role } from '@prisma/client'
 import { NextFunction, Request, Response } from 'express'
 import createHttpError from 'http-errors'
 import jwt from 'jsonwebtoken'
-
-type Role = 'user' | 'admin'
 
 export const userVerify = (roles: Array<Role>) => {
   return async (req: Request, res: Response, next: NextFunction) => {

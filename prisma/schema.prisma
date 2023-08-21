@@ -16,7 +16,7 @@ model User {
   address      String?
   password     String
   verified     Boolean       @default(false)
-  role         String        @default("user")
+  role         Role          @default(none)
   Cart         Cart[]
   Rating       Rating[]
   Review       Review[]
@@ -24,11 +24,12 @@ model User {
   Verification Verification?
 }
 
-// enum Role {
-//   user 
-//   admin
-//   supervisor
-// }
+enum Role {
+  none
+  user
+  admin
+  supervisor
+}
 
 model Verification {
   id     String   @unique
@@ -49,6 +50,7 @@ model ForgotPassword {
 model Category {
   id      Int       @id @default(autoincrement())
   name    String    @unique
+  cover   String
   Product Product[]
 }
 

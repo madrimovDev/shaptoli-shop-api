@@ -134,8 +134,19 @@ const forgotPasswordLink = async (
 ) => {
   try {
     const { id, code, time } = req.query
-    console.log(id, code, time)
-    res.send()
+    const { password } = req.body
+
+    if (!id || !code) throw createHttpError(400, '"id" or "code" not found')
+
+    await authService.forgotPasswordLink(
+      String(id),
+      +code,
+      password
+    )
+
+    res.send({
+      message: 'Password Updated',
+    })
   } catch (e) {
     next(e)
   }

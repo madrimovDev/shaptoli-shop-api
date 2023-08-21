@@ -11,6 +11,6 @@ router.get('/verify', authController.verify)
 router.post('/verification', authController.verification)
 router.post('/resend', authController.resend)
 router.post('/forgot-password-email', authController.forgotPasswordEmail)
-router.get('/forgot-password', authController.forgotPasswordLink)
+router.post('/forgot-password', authController.forgotPasswordLink)
 
 export default router
