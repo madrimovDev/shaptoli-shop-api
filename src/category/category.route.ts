@@ -4,6 +4,7 @@ import { userVerify } from '../common/user-verify.middleware'
 import { errorHandler } from '../common/error-handler'
 import bodyValidate from '../common/body-validate.middleware'
 import categoryModel from './category.model'
+import upload from '../common/uploadFile.middleware'
 
 const router = Router()
 

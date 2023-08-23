@@ -22,6 +22,7 @@ model User {
   Review       Review[]
   Saved        Saved[]
   Verification Verification?
+  Order        Order[]
 }
 
 enum Role {
@@ -69,6 +70,8 @@ model Product {
   Rating      Rating[]
   Review      Review[]
   Saved       Saved[]
+  Order       Order    @relation(fields: [orderId], references: [id])
+  orderId     Int
 }
 
 model Image {
@@ -126,4 +129,20 @@ model Cart {
   Product   Product @relation(fields: [productId], references: [id])
   User      User    @relation(fields: [userId], references: [id])
   userId    Int
+}
+
+model Order {
+  id        Int         @id @default(autoincrement())
+  productId Int
+  userId    Int
+  count     Int
+  Product   Product[]
+  User      User        @relation(fields: [userId], references: [id])
+  status    OrderStatus @default(waiting_pay)
+}
+
+enum OrderStatus {
+  waiting_pay
+  delivered
+  accepted
 }

@@ -6,6 +6,16 @@ const getAllUser = async (verified?: boolean) => {
     where: {
       verified,
     },
+    select: {
+      id: true,
+      address: true,
+      name: true,
+      surname: true,
+      email: true,
+      role: true,
+      phone: true,
+      verified: true,
+    },
   })
   return users
 }
@@ -14,6 +24,16 @@ const getAllAdmins = async () => {
   const admins = await prisma.user.findMany({
     where: {
       role: 'admin',
+    },
+    select: {
+      id: true,
+      address: true,
+      name: true,
+      surname: true,
+      email: true,
+      role: true,
+      phone: true,
+      verified: true,
     },
   })
   return admins
@@ -36,6 +56,17 @@ const toggleAdmin = async (userId: number) => {
     },
     data: {
       role: user.role === 'user' ? 'admin' : 'user',
+      verified: true,
+    },
+    select: {
+      id: true,
+      address: true,
+      name: true,
+      surname: true,
+      email: true,
+      role: true,
+      phone: true,
+      verified: true,
     },
   })
 
