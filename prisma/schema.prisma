@@ -70,8 +70,7 @@ model Product {
   Rating      Rating[]
   Review      Review[]
   Saved       Saved[]
-  Order       Order    @relation(fields: [orderId], references: [id])
-  orderId     Int
+  Order       Order[]
 }
 
 model Image {
@@ -136,7 +135,7 @@ model Order {
   productId Int
   userId    Int
   count     Int
-  Product   Product[]
+  Product   Product     @relation(fields: [productId], references: [id])
   User      User        @relation(fields: [userId], references: [id])
   status    OrderStatus @default(waiting_pay)
 }

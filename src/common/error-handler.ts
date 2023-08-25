@@ -16,4 +16,7 @@ export const errorHandler = (
       message: 'Something went wrong',
     })
   }
+  if (process.env.NODE_ENV === 'development') {
+    console.log(error.stack)
+  }
 }
