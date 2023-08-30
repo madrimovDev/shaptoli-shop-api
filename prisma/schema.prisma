@@ -23,6 +23,7 @@ model User {
   Saved        Saved[]
   Verification Verification?
   Order        Order[]
+  BotUser      BotUser?
 }
 
 enum Role {
@@ -144,4 +145,11 @@ enum OrderStatus {
   waiting_pay
   delivered
   accepted
+}
+
+model BotUser {
+  id         Int  @id @default(autoincrement())
+  userId     Int  @unique
+  telegramId Int
+  User       User @relation(fields: [userId], references: [id])
 }

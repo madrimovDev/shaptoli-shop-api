@@ -14,6 +14,7 @@ const createCategory = async (name: string) => {
 
   const newCategory = await prisma.category.create({
     data: {
+      cover: '',
       name,
     },
   })
@@ -77,7 +78,6 @@ const getProductsByCategory = async (id: number) => {
     products: category.Product,
   }
 }
-
 
 const updateCategory = async (id: number, name: string) => {
   const findedCategory = await prisma.category.findUnique({
