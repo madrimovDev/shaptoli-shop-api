@@ -36,7 +36,22 @@ const removeProductFromCart: ControllerType = async (req, res, next) => {
   }
 }
 
+const getUserCart: ControllerType = async (req, res, next) => {
+  try {
+    const userId = res.locals.user.id as number
+    const carts = await cartService.getUserCart(userId)
+
+    res.send({
+      message: 'User cart',
+      carts,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
 export default {
   addProductToCart,
   removeProductFromCart,
+  getUserCart,
 }

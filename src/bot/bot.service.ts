@@ -26,7 +26,9 @@ export const onStartBot = async () => {
         },
       ])
 
-      bot.sendMessage(id, 'Hello world')
+      bot.sendMessage(id, '<pre language="javascript">let i = 0</pre>', {
+        parse_mode: 'HTML',
+      })
     }
   })
 
